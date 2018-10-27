@@ -4,6 +4,7 @@ import secrets
 import sys, os
 import twitter
 import time
+from util import *
 
 
 api = twitter.Api(consumer_key=secrets.consumer_key,
@@ -32,10 +33,9 @@ def load_historical(set,output_file,existing_file=True):
         if len(ids_to_request) > 99:
             for data in request_tweet_data(ids_to_request):
                 tweet_data.append(data)
-            print("loading tweest {} thru {}...".format(ids_to_request[0], ids_to_request[-1]))
+            super_print("loading tweets {} thru {}...".format(ids_to_request[0], ids_to_request[-1]))
             time.sleep(1)
             ids_to_request = []
-
 
     # get any last ids that didn't make it
     for data in request_tweet_data(ids_to_request):
