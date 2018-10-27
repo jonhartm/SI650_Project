@@ -35,8 +35,8 @@ def load_historical(tweet_id_file,output_file):
     # we can only request 100 tweets at a time, so we fill up this array,
     # pass it to the worker function at 99 ids, then dump it and start again
     ids_to_request = []
+    requests = 0
     for tweet_id in tweet_ids:
-
         # skip ids that are already saved in file
         if int(tweet_id) in loaded_tweets: # skip it if this id has already been loaded
             print("Tweet ID {} already loaded...".format(tweet_id))
@@ -47,11 +47,24 @@ def load_historical(tweet_id_file,output_file):
         if len(ids_to_request) > 99:
             for data in request_tweet_data(ids_to_request):
                 tweet_data.append(data)
+            requests += 1
             # just so we know it's working and how fast it's going
-            super_print("loading tweets {} thru {}...".format(ids_to_request[0], ids_to_request[-1]))
+            super_print("Request #{} - loading tweets {} thru {}...".format(requests, ids_to_request[0], ids_to_request[-1]))
             # we're rate limited to 1 request a second.
             time.sleep(1)
             ids_to_request = []
+
+            # bank the data we've gotten so far
+            if requests%10==0:
+                super_print("banking the last 1000 tweets...")
+                # save the data we collected to a csv
+                if os.path.isfile(output_file):
+                    # the file already exists, so append the data to the end
+                    DataFrame(tweet_data).to_csv(output_file, mode='a', header=False)
+                else:
+                    DataFrame(tweet_data).to_csv(output_file)
+                tweet_data = []
+
 
     # get any last ids that didn't make it
     for data in request_tweet_data(ids_to_request):
