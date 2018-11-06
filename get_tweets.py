@@ -12,6 +12,20 @@ api = twitter.Api(consumer_key=secrets.consumer_key,
                   access_token_key=secrets.access_token_key,
                   access_token_secret=secrets.access_token_secret)
 
+# Convert a twitter status to a dict
+# params:
+#   status: a Status object from the python-twitter library
+# returns:
+#   a dict
+def status_to_dict(status):
+    return {
+            "id":status.id,
+            "user":status.user.id,
+            "time":status.created_at_in_seconds,
+            "text":status.text,
+            "urls":",".join([url.expanded_url for url in status.urls])
+        }
+
 # Load a set of tweet ids from a file, pull the tweet data from the Twitter API and output to a csv
 # params:
 #   tweet_id_file: the filename of the tweet ids.
@@ -86,13 +100,7 @@ def request_tweet_data(ids):
     tweet_data = []
     data = api.GetStatuses(ids, trim_user=True)
     for tweet in data:
-        tweet_data.append({
-                "id":tweet.id,
-                "user":tweet.user.id,
-                "time":tweet.created_at_in_seconds,
-                "text":tweet.text,
-                "urls":",".join([url.expanded_url for url in tweet.urls])
-            })
+        tweet_data.append(status_to_dict(tweet))
     return tweet_data
 
 if __name__=="__main__":
