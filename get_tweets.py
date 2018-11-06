@@ -24,7 +24,7 @@ def load_historical(tweet_id_file,output_file):
     # just so we don't have to keep retrieveing tweets we already got
     # check to see if this file already exists. If so, lets pull the tweet ids from it and skip them
     if os.path.isfile(output_file):
-        loaded_tweets = pd.read_csv(output_file).id.values
+        loaded_tweets = pd.read_csv(output_file, lineterminator='\n').id.values
 
     tweet_data = []
 
