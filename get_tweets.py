@@ -146,7 +146,11 @@ def get_recent_tweets(file_name):
         # bank the data we've gotten so far
         if requests%10==0:
             super_print("banking recent tweets for the last 10 users")
-            DataFrame(tweet_data).to_csv(file_name)
+            if os.path.isfile(output_file):
+                # the file already exists, so append the data to the end
+                DataFrame(tweet_data).to_csv(file_name, mode='a', header=False)
+            else:
+                DataFrame(tweet_data).to_csv(file_name)
             accounts.to_csv("accounts.csv")
             tweet_data = []
 
