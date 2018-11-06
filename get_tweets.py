@@ -103,12 +103,65 @@ def request_tweet_data(ids):
         tweet_data.append(status_to_dict(tweet))
     return tweet_data
 
+def get_recent_tweets(file_name):
+    if os.path.isfile("accounts.csv"):
+        accounts = pd.read_csv("accounts.csv")
+    else:
+        sen_accounts = pd.read_csv("data/senators-accounts.csv")
+        rep_accounts = pd.read_csv("data/representatives-accounts.csv")
+        accounts = sen_accounts.append(rep_accounts)
+
+        # make sure we have a 'last_id' column, add it if we don't
+        if 'last_id' not in accounts.columns:
+            accounts['last_id'] = 0
+
+    tweet_data = []
+    requests = 0
+    for account in accounts.iterrows():
+        super_print("Loading tweets for account {:.0f} starting at {:.0f}".format(account[1].Uid, account[1].last_id))
+        tweets = []
+        try:
+            tweets = api.GetUserTimeline(
+                user_id=account[1].Uid,
+                since_id=account[1].last_id,
+                count=200,
+                include_rts=False,
+                trim_user=True,
+                exclude_replies=True)
+        except Exception as e:
+            super_print("Unable to retrieve account {}: ".format(account[1].Uid) + str(e))
+
+        # time.sleep(1)
+        requests += 1
+
+        # if we found any new tweets, update the accounts list to reflect that
+        if len(tweets) > 0:
+            # the most recent tweet should be the 0th element - save that as the 'last_id'
+            accounts.loc[accounts.Uid == account[1].Uid, 'last_id'] = tweets[0].id
+
+        super_print("Found {} tweets...".format(len(tweets)))
+        for tweet in tweets:
+            tweet_data.append(status_to_dict(tweet))
+
+        # bank the data we've gotten so far
+        if requests%10==0:
+            super_print("banking recent tweets for the last 10 users")
+            DataFrame(tweet_data).to_csv(file_name)
+            accounts.to_csv("accounts.csv")
+            tweet_data = []
+
 if __name__=="__main__":
     if len(sys.argv) > 1:
-        if "--load" in sys.argv and len(sys.argv) >= 4:
-            if sys.argv[2] == "senators":
-                print("Loading all historical Senator tweets...")
-                load_historical("data/senators.txt", sys.argv[3])
-            elif sys.argv[2] == "reps":
-                print("Loading all historical Representative tweets...")
-                load_historical("data/representatives.txt", sys.argv[3])
+        if "--load" in sys.argv:
+            if len(sys.argv) >= 4:
+                if sys.argv[2] == "senators":
+                    print("Loading all historical Senator tweets...")
+                    load_historical("data/senators.txt", sys.argv[3])
+                elif sys.argv[2] == "reps":
+                    print("Loading all historical Representative tweets...")
+                    load_historical("data/representatives.txt", sys.argv[3])
+                elif sys.argv[2] == "recent":
+                    print("Loading all recent tweets...")
+                    get_recent_tweets(sys.argv[3])
+            else:
+                print("missing one or more parameters...")
