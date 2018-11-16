@@ -4,6 +4,8 @@ import sys
 import json
 import time
 import csv
+import codecs
+sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer)
 
 #people_list = []
 # read in csv file
@@ -32,14 +34,14 @@ import csv
 #with open('Individual_People2.txt', 'w', encoding = 'utf-8') as file:
 #     file.write(json.dumps(people_storage))
 
-with open("Individual_People2.txt", 'r', encoding = 'utf-8') as file:
+with open("C:/Users/julie/Documents/SI650/Individual_People2.txt", 'r') as file:
     info = json.load(file)
 
 #print(info.keys())
 page_soup = BeautifulSoup(info['Bernie Sanders_vt_Senate'], 'html.parser')
 link_items = page_soup.find_all('li')
 for every in link_items:
-    print(every.encode('utf-8').encode('cp850', 'replace').decode('cp850'))
+    print(every)
     #name_join = 'Bernie Sanders' + ' ' + "on"
     #if name_join in every:
     #    print(every)
