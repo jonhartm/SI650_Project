@@ -1,4 +1,6 @@
 __pycache__/
+indexdir/
+.ipynb_checkpoints/
 secrets.py
 *.csv
 *.txt
