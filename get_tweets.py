@@ -10,7 +10,8 @@ from util import *
 api = twitter.Api(consumer_key=secrets.consumer_key,
                   consumer_secret=secrets.consumer_secret,
                   access_token_key=secrets.access_token_key,
-                  access_token_secret=secrets.access_token_secret)
+                  access_token_secret=secrets.access_token_secret,
+                  tweet_mode='extended')
 
 # Convert a twitter status to a dict
 # params:
@@ -22,7 +23,7 @@ def status_to_dict(status):
             "id":status.id,
             "user":status.user.id,
             "time":status.created_at_in_seconds,
-            "text":status.text,
+            "text":status.full_text,
             "urls":",".join([url.expanded_url for url in status.urls])
         }
 
