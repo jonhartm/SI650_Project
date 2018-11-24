@@ -212,6 +212,35 @@ def get_user_tweets(user_id, since_id=None):
     else:
         return None, None
 
+# Get all tweets from all accounts in the provided file and save them to the output file
+# params:
+#   accounts_file: the file that contains account data
+#   output_file: filename where the output should be saved
+def update_all_accounts(accounts_file, output_file):
+    accounts = pd.read_csv(accounts_file ,na_filter=False)
+    accounts.set_index("Uid", inplace=True)
+
+    tweet_data = []
+    for account in accounts.iterrows():
+        account_id = account[0]
+        newest_id = account[1].newest_id
+
+        if newest_id is '': newest_id = None
+
+        account_tweets, max_id = get_user_tweets(account_id, since_id=newest_id)
+
+        # if we have new tweets, update the accounts list
+        if max_id is not None:
+            accounts.loc[account[0]].newest_id = max_id
+
+            if os.path.isfile(output_file):
+                # the file already exists, so append the data to the end
+                DataFrame(account_tweets).to_csv(output_file, index=None,mode='a', header=False)
+            else:
+                DataFrame(account_tweets).to_csv(output_file, index=None)
+
+        accounts.to_csv(accounts_file)
+
 if __name__=="__main__":
     if len(sys.argv) > 1:
         if "--load" in sys.argv:
