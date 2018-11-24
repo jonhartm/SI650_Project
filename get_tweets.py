@@ -163,10 +163,6 @@ def create_account_file(output_file):
     rep_accounts = pd.read_csv("data/representatives-accounts.csv")
     accounts = sen_accounts.append(rep_accounts)
     accounts.set_index("Uid", inplace=True)
-
-    if 'newest_id' not in accounts.columns:
-        accounts['newest_id'] = None
-
     accounts.to_csv(output_file)
 
 # Get all tweets we can from a given account id.
@@ -178,7 +174,7 @@ def create_account_file(output_file):
 #       a list of tweet data in dict form from status_to_dict
 #       the id of the most recent tweet found
 def get_user_tweets(user_id, since_id=None):
-    print("getting tweets for {} since id {}".format(user_id, since_id))
+    super_print("getting tweets for {} since id {}".format(user_id, since_id))
     max_id = None
     tweet_data = []
     more_tweets = True
@@ -193,7 +189,7 @@ def get_user_tweets(user_id, since_id=None):
                 trim_user=True)
 
             if len(tweets) > 0:
-                print("Found {} new tweets...".format(len(tweets)))
+                super_print("Found {} new tweets...".format(len(tweets)))
 
                 for tweet in tweets:
                     tweet_data.append(status_to_dict(tweet))
@@ -202,15 +198,15 @@ def get_user_tweets(user_id, since_id=None):
                 time.sleep(1)
             else:
                 break
-        print("Found {} total tweets for user {}...".format(len(tweet_data), user_id))
+        super_print("Found {} total tweets for user {}...".format(len(tweet_data), user_id))
     except:
-        print("Unable to access twitter account",user_id)
+        super_print("Unable to access twitter account",user_id)
 
     tweet_data = DataFrame(tweet_data)
     if len(tweet_data) > 0:
-        return tweet_data, tweet_data.id.max()
+        return tweet_data
     else:
-        return None, None
+        return None
 
 # Get all tweets from all accounts in the provided file and save them to the output file
 # params:
@@ -220,14 +216,27 @@ def update_all_accounts(accounts_file, output_file):
     accounts = pd.read_csv(accounts_file ,na_filter=False)
     accounts.set_index("Uid", inplace=True)
 
+    # check and see if this file already exists, in which case we can skip tweets we've already got
+    try:
+        if os.path.isfile(output_file):
+            already_loaded = pd.read_csv(output_file)[['id','user']]
+            already_loaded = already_loaded.groupby('user').max()
+        else:
+            already_loaded = DataFrame(columns=['id','user'])
+    except:
+        super_print("unable to read output file - check before overwriting")
+        raise Exception
+
     tweet_data = []
     for account in accounts.iterrows():
         account_id = account[0]
-        newest_id = account[1].newest_id
 
-        if newest_id is '': newest_id = None
+        if account_id in already_loaded.index:
+            max_id = already_loaded.loc[account_id].id
+        else:
+            max_id = None
 
-        account_tweets, max_id = get_user_tweets(account_id, since_id=newest_id)
+        account_tweets = get_user_tweets(account_id, since_id=max_id)
 
         # if we have new tweets, update the accounts list
         if max_id is not None:
@@ -254,5 +263,12 @@ if __name__=="__main__":
                 elif sys.argv[2] == "recent":
                     print("Loading all recent tweets...")
                     get_recent_tweets(sys.argv[3])
+                elif sys.argv[2] == "all":
+                    if len(sys.argv)==5:
+                        print("getting all tweets for user",sys.argv[3],"...")
+                        get_user_tweets(int(sys.argv[3]), since_id=None)
+                    else:
+                        print("gettting all tweets...")
+                        update_all_accounts('accounts.csv', sys.argv[3])
             else:
                 print("missing one or more parameters...")
