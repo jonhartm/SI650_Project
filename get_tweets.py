@@ -169,6 +169,49 @@ def create_account_file(output_file):
 
     accounts.to_csv(output_file)
 
+# Get all tweets we can from a given account id.
+# params:
+#   user_id: integer - the user id to get tweets for.
+#   since_id: integer - restrict to only tweets after this id
+# returns:
+#   a tuple:
+#       a list of tweet data in dict form from status_to_dict
+#       the id of the most recent tweet found
+def get_user_tweets(user_id, since_id=None):
+    print("getting tweets for {} since id {}".format(user_id, since_id))
+    max_id = None
+    tweet_data = []
+    more_tweets = True
+    try:
+        while more_tweets:
+            tweets = api.GetUserTimeline(
+                user_id=user_id,
+                max_id=max_id,
+                since_id=since_id,
+                count=200,
+                include_rts=False,
+                trim_user=True)
+
+            if len(tweets) > 0:
+                print("Found {} new tweets...".format(len(tweets)))
+
+                for tweet in tweets:
+                    tweet_data.append(status_to_dict(tweet))
+
+                max_id = tweet_data[-1]['id']-1
+                time.sleep(1)
+            else:
+                break
+        print("Found {} total tweets for user {}...".format(len(tweet_data), user_id))
+    except:
+        print("Unable to access twitter account",user_id)
+
+    tweet_data = DataFrame(tweet_data)
+    if len(tweet_data) > 0:
+        return tweet_data, tweet_data.id.max()
+    else:
+        return None, None
+
 if __name__=="__main__":
     if len(sys.argv) > 1:
         if "--load" in sys.argv:
