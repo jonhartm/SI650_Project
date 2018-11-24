@@ -206,7 +206,7 @@ def get_user_tweets(user_id, since_id=None):
     if len(tweet_data) > 0:
         return tweet_data
     else:
-        return None
+        return []
 
 # Get all tweets from all accounts in the provided file and save them to the output file
 # params:
@@ -239,7 +239,7 @@ def update_all_accounts(accounts_file, output_file):
         account_tweets = get_user_tweets(account_id, since_id=max_id)
 
         # if we have new tweets, update the accounts list
-        if max_id is not None:
+        if len(account_tweets) > 0:
             accounts.loc[account[0]].newest_id = max_id
 
             if os.path.isfile(output_file):
