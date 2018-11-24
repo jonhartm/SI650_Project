@@ -200,7 +200,7 @@ def get_user_tweets(user_id, since_id=None):
                 break
         super_print("Found {} total tweets for user {}...".format(len(tweet_data), user_id))
     except:
-        super_print("Unable to access twitter account",user_id)
+        super_print("Unable to access twitter account {}".format(user_id))
 
     tweet_data = DataFrame(tweet_data)
     if len(tweet_data) > 0:
