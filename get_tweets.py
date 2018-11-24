@@ -155,6 +155,20 @@ def get_recent_tweets(file_name):
             accounts.to_csv("accounts.csv")
             tweet_data = []
 
+# create a blank "account" file based on the combination of the senator and reps accounts csvs
+# params:
+#   output_file: string for the filename to output
+def create_account_file(output_file):
+    sen_accounts = pd.read_csv("data/senators-accounts.csv")
+    rep_accounts = pd.read_csv("data/representatives-accounts.csv")
+    accounts = sen_accounts.append(rep_accounts)
+    accounts.set_index("Uid", inplace=True)
+
+    if 'newest_id' not in accounts.columns:
+        accounts['newest_id'] = None
+
+    accounts.to_csv(output_file)
+
 if __name__=="__main__":
     if len(sys.argv) > 1:
         if "--load" in sys.argv:
