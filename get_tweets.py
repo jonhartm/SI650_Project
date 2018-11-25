@@ -1,5 +1,6 @@
 import pandas as pd
 from pandas import DataFrame
+import numpy as np
 import secrets
 import sys, os
 import twitter
@@ -219,9 +220,12 @@ def update_all_accounts(accounts_file, output_file):
     # check and see if this file already exists, in which case we can skip tweets we've already got
     try:
         if os.path.isfile(output_file):
+            super_print("found an existing file, loading...")
             already_loaded = pd.read_csv(output_file)[['id','user']]
+            already_loaded.id = already_loaded.id.astype(np.int64)
             already_loaded = already_loaded.groupby('user').max()
         else:
+            super_print("no file exists. creating a dummy...")
             already_loaded = DataFrame(columns=['id','user'])
     except:
         super_print("unable to read output file - check before overwriting")
@@ -232,7 +236,9 @@ def update_all_accounts(accounts_file, output_file):
         account_id = account[0]
 
         if account_id in already_loaded.index:
-            max_id = already_loaded.loc[account_id].id
+            max_id = already_loaded.loc[account_id].id + 1
+            if pd.isnull(max_id):
+                max_id = None
         else:
             max_id = None
 
@@ -240,7 +246,7 @@ def update_all_accounts(accounts_file, output_file):
 
         # if we have new tweets, update the accounts list
         if len(account_tweets) > 0:
-            accounts.loc[account[0]].newest_id = max_id
+            accounts.loc[account[0]].newest_id = account_tweets.id.max()
 
             if os.path.isfile(output_file):
                 # the file already exists, so append the data to the end
@@ -248,7 +254,9 @@ def update_all_accounts(accounts_file, output_file):
             else:
                 DataFrame(account_tweets).to_csv(output_file, index=None)
 
-        accounts.to_csv(accounts_file)
+            accounts.to_csv(accounts_file)
+        else:
+            time.sleep(1)
 
 if __name__=="__main__":
     if len(sys.argv) > 1:
