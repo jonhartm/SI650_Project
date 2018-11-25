@@ -53,7 +53,11 @@ for each_key in info:
         #new_date = every.text.strip()[-11:]
         #print(new_date)
         for each in bumped_split:
-            info_tabs.append(each.strip())
+            text_stripped = each.strip()
+            # split date off end
+            text_bit = text_stripped[:-11]
+            date_bit = text_stripped[-11:]
+            info_tabs.append([text_bit.strip(), date_bit.strip()])
 
     keep_topics[each_key] = info_tabs
 
