@@ -45,17 +45,19 @@ for each_key in info:
     link_items = page_soup.find_all('li')
     info_tabs = []
     for every in link_items:
-        new_text = every.text
+        new_text = str(every.text)
+        bumped_split = new_text.split("\r\n")
         #new_text2 = new_text.strip()[:-11]
         # extract ( DATE )
         #print(new_text2)
         #new_date = every.text.strip()[-11:]
         #print(new_date)
-        info_tabs.append(new_text)
+        for each in bumped_split:
+            info_tabs.append(each.strip())
 
     keep_topics[each_key] = info_tabs
 
-#print(keep_topics)
+#print(keep_topics['Debbie Stabenow_mi_Senate'][0:5])
 
 with open("totalsheet.json", "w", encoding = 'utf-8') as tsw:
     json.dump(keep_topics, tsw)
