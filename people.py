@@ -37,31 +37,58 @@ sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer)
 with open("C:/Users/julie/Documents/SI650/Individual_People2.txt", 'r') as file:
     info = json.load(file)
 
-#print(info.keys())
 keep_topics = {}
-
 for each_key in info:
     page_soup = BeautifulSoup(info[each_key], 'html.parser')
-    link_items = page_soup.find_all('li')
-    info_tabs = []
-    for every in link_items:
-        new_text = str(every.text)
-        bumped_split = new_text.split("\r\n")
+    headers = page_soup.find_all('td')
+    test_bit = {}
+    for each in headers:
+        if 'Click here for' in each.text:
+            info_tabs = []
+            text_chunk = each.text
+            splitup = text_chunk.split('\r\n')
+            keytouse = splitup[1].split(' on ')
+            #print(keytouse)
+            if len(keytouse) > 1:
+                if keytouse[1] not in test_bit:
+                    test_bit[keytouse[1]] = []
+                for each_text in splitup[2:]:
+                    new_text = str(each_text)
+                    stripped = new_text.strip()
+                    remove_tabs = stripped.replace('\t', '')
+                    remove_n = remove_tabs.replace('\n', '')
+                    text_bit = remove_n[:-11]
+                    date_bit = remove_n[-11:]
+                    info_tabs.append([text_bit.strip(), date_bit.strip()])
+                    test_bit[keytouse[1]].append(info_tabs)
+    keep_topics[each_key] = test_bit
+
+#print(keep_topics.keys())
+#print(info.keys())
+#keep_topics = {}
+
+#for each_key in info:
+#    page_soup = BeautifulSoup(info[each_key], 'html.parser')
+#    link_items = page_soup.find_all('li')
+#    info_tabs = []
+#    for every in link_items:
+#        new_text = str(every.text)
+#        bumped_split = new_text.split("\r\n")
         #new_text2 = new_text.strip()[:-11]
         # extract ( DATE )
         #print(new_text2)
         #new_date = every.text.strip()[-11:]
         #print(new_date)
-        for each in bumped_split:
-            text_stripped = each.strip()
+#        for each in bumped_split:
+#            text_stripped = each.strip()
             # split date off end
-            text_bit = text_stripped[:-11]
-            date_bit = text_stripped[-11:]
-            info_tabs.append([text_bit.strip(), date_bit.strip()])
+#            text_bit = text_stripped[:-11]
+#            date_bit = text_stripped[-11:]
+#            info_tabs.append([text_bit.strip(), date_bit.strip()])
 
-    keep_topics[each_key] = info_tabs
+#    keep_topics[each_key] = info_tabs
 
 #print(keep_topics['Debbie Stabenow_mi_Senate'][0:5])
 
-with open("totalsheet.json", "w", encoding = 'utf-8') as tsw:
+with open("by_topic.json", "w", encoding = 'utf-8') as tsw:
     json.dump(keep_topics, tsw)
