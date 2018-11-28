@@ -11,10 +11,10 @@ def tryParseInt(s):
 
 # class for starting and stopping a timer, then reporting the elapsed time
 class Timer():
-    def Start(self):
+    def start(self):
         self.start = time.time()
 
-    def Stop(self):
+    def stop(self):
         self.end = time.time()
         self.elapsed = self.end-self.start
 
