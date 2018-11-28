@@ -1,6 +1,7 @@
 import argparse, json, re
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
+import pandas as pd
 
 import index as idx
 
@@ -25,6 +26,13 @@ def index():
         "index.html",
         terms=term_pairs
     )
+
+@app.route('/get_account', methods=['POST'])
+def get_account():
+    if request.method == "POST":
+        term = request.get_json()['search_term']
+
+        return jsonify(idx.search_combined(term))
 
 # create the parser object
 parser = argparse.ArgumentParser(
