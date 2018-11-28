@@ -56,7 +56,7 @@ def create_tweet_index(docs):
     ix = create_in("indexdir", schema)
 
     with ix.writer() as writer:
-        for doc in docs.sample(1000).iterrows():
+        for doc in docs.iterrows():
             try:
                 writer.add_document(
                     content=doc[1].text,
@@ -79,7 +79,7 @@ def create_combined_index(docs):
     super_print("Creating combined index...")
 
     # group the docs by user so we can clump all of a given user's tweets into a single document
-    combined_docs = docs.sample(1000).groupby('user')
+    combined_docs = docs.groupby('user')
 
     # set up the schema
     schema = Schema(
