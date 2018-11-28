@@ -119,11 +119,7 @@ def search_combined(search_term, limit=3):
 # params:
 #   index: the woosh.index object to search
 #   search_term: the string to check for in the index
-<<<<<<< HEAD
 #   limit: maximum number of ids to return
-=======
-#   limit: (optional) maximum number of ids to return
->>>>>>> bcc956e7fdcc2cd389524935e6faeb95a3e2e2b4
 # returns:
 #   a list of ids containing most related to the provided term
 def _do_search(index, search_term, limit):
