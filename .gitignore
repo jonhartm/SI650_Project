@@ -1,5 +1,6 @@
 __pycache__/
 indexdir/
+indexcomb/
 .ipynb_checkpoints/
 secrets.py
 *.csv
