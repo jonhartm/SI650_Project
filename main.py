@@ -2,7 +2,7 @@ import argparse, json, re
 
 from flask import Flask, render_template
 
-import index
+import index as idx
 
 tweet_file = 'output.csv'
 account_file = 'accounts.csv'
@@ -40,10 +40,10 @@ parser.add_argument("--searchcombined", nargs=1, help = "Search the combined ind
 args = parser.parse_args()
 
 if args.createindex != None:
-    index.create_all(args.createindex[0])
+    idx.create_all(args.createindex[0])
 elif args.searchtweets != None:
-    print(index.search_tweets(args.searchtweets[0]))
+    print(idx.search_tweets(args.searchtweets[0]))
 elif args.searchcombined != None:
-    print(index.search_combined(args.searchcombined[0]))
+    print(idx.search_combined(args.searchcombined[0]))
 else:
     app.run(debug=True)
