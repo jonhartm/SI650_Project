@@ -49,7 +49,7 @@ def create_tweet_index(docs):
         id=ID(stored=True),
         hashtags=KEYWORD,
         ats=KEYWORD,
-        urls=TEXT,
+        # urls=TEXT,
         user=KEYWORD
     )
     ix = create_in("indexdir", schema)
@@ -62,7 +62,7 @@ def create_tweet_index(docs):
                     id=str(doc[1].id),
                     hashtags=','.join(doc[1].hashtags),
                     ats=','.join(doc[1].ats),
-                    urls=' '.join(doc[1].urls),
+                    # urls=' '.join(doc[1].urls),
                     user=str(doc[1].user)
                 )
             except:
