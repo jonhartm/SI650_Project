@@ -2,8 +2,16 @@ import argparse, json, re
 
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
+import twitter
 
+import secrets
 import index as idx
+
+api = twitter.Api(consumer_key=secrets.consumer_key,
+                  consumer_secret=secrets.consumer_secret,
+                  access_token_key=secrets.access_token_key,
+                  access_token_secret=secrets.access_token_secret,
+                  tweet_mode='extended')
 
 tweet_file = 'output.csv'
 account_file = 'accounts.csv'
@@ -31,8 +39,15 @@ def index():
 def get_account():
     if request.method == "POST":
         term = request.get_json()['search_term']
-
-        return jsonify(idx.search_combined(term))
+        ret_value = []
+        for account_id in idx.search_combined(term):
+            user = api.GetUser(int(account_id))
+            ret_value.append({
+                "name":user.name,
+                "screen_name":user.screen_name,
+                "profile_image":user.profile_image_url_https
+            })
+        return jsonify(ret_value)
 
 # create the parser object
 parser = argparse.ArgumentParser(

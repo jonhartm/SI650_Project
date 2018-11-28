@@ -10,7 +10,7 @@ $('#btn_search').click(function() {
     url:'/get_account',
     success: function(response) {
       console.log("ok");
-      $(".account_results").text(response.search_term);
+      console.log(response);
     },
     error: function(error) {
       console.log("uh oh");
