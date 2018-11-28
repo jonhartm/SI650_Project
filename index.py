@@ -1,6 +1,7 @@
 import os
 
 import pandas as pd
+import numpy as np
 
 from whoosh.index import create_in, open_dir
 from whoosh.fields import *
@@ -93,7 +94,7 @@ def create_combined_index(docs):
             try:
                 writer.add_document(
                     content=' '.join(doc[1].text),
-                    id=str(doc[0])
+                    id=str(np.int64(float(doc[0])))
                 )
             except Exception as e:
                 print(e)
