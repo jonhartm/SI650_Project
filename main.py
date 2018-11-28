@@ -1,4 +1,4 @@
-import argparse
+import argparse, json, re
 
 from flask import Flask, render_template
 
@@ -6,12 +6,25 @@ import index
 
 tweet_file = 'output.csv'
 account_file = 'accounts.csv'
+on_the_issues_file = 'by_topic.json'
 
 app = Flask(__name__)
 
+# load the on the issues reference file
+with open(on_the_issues_file) as f:
+    oti_data = json.load(f)
+
 @app.route('/')
 def index():
-    return render_template("index.html")
+    # 24 terms, shouldn't matter who we pull them from
+    terms = oti_data['Debbie Stabenow_mi_Senate'].keys()
+    # I want to pass both a pretty and a usable version of each term
+    r = re.compile('[^a-zA-Z]')
+    term_pairs = [[r.sub('',x.lower()), x] for x in terms]
+    return render_template(
+        "index.html",
+        terms=term_pairs
+    )
 
 # create the parser object
 parser = argparse.ArgumentParser(

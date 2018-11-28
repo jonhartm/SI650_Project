@@ -5,7 +5,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  I'm working
+  <label for="search_term"> Select a search term:
+    <select class="dd_search_term" name="search_term">
+      {%for term in terms%}
+        <option value={{term[0]}}>{{term[1]}}</option>
+      {%endfor%}
+    </select>
+  </label>
 </body>
 <footer>
 </footer>
