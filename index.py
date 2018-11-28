@@ -104,15 +104,7 @@ def create_combined_index(docs):
 # returns:
 #   a list of tweet ids most related to the provided term
 def search_tweets(search_term, limit=5):
-    ix = open_dir("indexdir")
-    result_ids = []
-    with ix.searcher() as searcher:
-        query = QueryParser("content", ix.schema).parse(search_term)
-        results = searcher.search(query, limit=limit)
-
-        for r in results:
-            result_ids.append(r['id'])
-    return result_ids
+    return _do_search(open_dir("indexdir"), search_term, limit)
 
 # search the combined index for the provided term
 # params:
@@ -121,10 +113,19 @@ def search_tweets(search_term, limit=5):
 # returns:
 #   a list of user ids containing tweets most related to the provided term
 def search_combined(search_term, limit=3):
-    ix = open_dir("indexcomb")
+    return _do_search(open_dir("indexcomb"), search_term, limit)
+
+# function that actually does the searching
+# params:
+#   index: the woosh.index object to search
+#   search_term: the string to check for in the index
+#   limit: maximum number of ids to return
+# returns:
+#   a list of ids containing most related to the provided term
+def _do_search(index, search_term, limit):
     result_ids = []
-    with ix.searcher() as searcher:
-        query = QueryParser("content", ix.schema).parse(search_term)
+    with index.searcher() as searcher:
+        query = QueryParser("content", index.schema).parse(search_term)
         results = searcher.search(query, limit=limit)
 
         for r in results:
