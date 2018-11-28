@@ -65,7 +65,8 @@ def create_tweet_index(docs):
                     # urls=' '.join(doc[1].urls),
                     user=str(doc[1].user)
                 )
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
 # Creates the combined tweet index
@@ -94,7 +95,8 @@ def create_combined_index(docs):
                     content=' '.join(doc[1].text),
                     id=str(doc[0])
                 )
-            except:
+            except Exception as e:
+                print(e)
                 pass
 
 # search the tweet index for the provided term
