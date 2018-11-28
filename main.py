@@ -19,7 +19,7 @@ def index():
     # 24 terms, shouldn't matter who we pull them from
     terms = oti_data['Debbie Stabenow_mi_Senate'].keys()
     # I want to pass both a pretty and a usable version of each term
-    r = re.compile('[^a-zA-Z]')
+    r = re.compile('[^a-z A-Z]')
     term_pairs = [[r.sub('',x.lower()), x] for x in terms]
     return render_template(
         "index.html",

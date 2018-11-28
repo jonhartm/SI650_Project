@@ -5,13 +5,16 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <label for="search_term"> Select a search term:
-    <select class="dd_search_term" name="search_term">
-      {%for term in terms%}
-        <option value={{term[0]}}>{{term[1]}}</option>
-      {%endfor%}
-    </select>
-  </label>
+  <div class="seach_controls">
+    <label for="search_term"> Select a search term:
+      <select id="search_term" class="dd_search_term" name="search_term">
+        {%for term in terms%}
+          <option value='{{term[0]}}'>{{term[1]}}</option>
+        {%endfor%}
+      </select>
+    </label>
+    <button type="button" id="btn_search" value="Search">Search</button>
+  </div>
 </body>
 <footer>
 </footer>
