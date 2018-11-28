@@ -96,3 +96,37 @@ def create_combined_index(docs):
                 )
             except:
                 pass
+
+# search the tweet index for the provided term
+# params:
+#   search_term: the string to check for in the index
+#   limit: (optional) maximum number of ids to return
+# returns:
+#   a list of tweet ids most related to the provided term
+def search_tweets(search_term, limit=5):
+    ix = open_dir("indexdir")
+    result_ids = []
+    with ix.searcher() as searcher:
+        query = QueryParser("content", ix.schema).parse(search_term)
+        results = searcher.search(query, limit=limit)
+
+        for r in results:
+            result_ids.append(r['id'])
+    return result_ids
+
+# search the combined index for the provided term
+# params:
+#   search_term: the string to check for in the index
+#   limit: (optional) maximum number of ids to return
+# returns:
+#   a list of user ids containing tweets most related to the provided term
+def search_combined(search_term, limit=3):
+    ix = open_dir("indexcomb")
+    result_ids = []
+    with ix.searcher() as searcher:
+        query = QueryParser("content", ix.schema).parse(search_term)
+        results = searcher.search(query, limit=limit)
+
+        for r in results:
+            result_ids.append(r['id'])
+    return result_ids
