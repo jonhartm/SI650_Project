@@ -52,7 +52,7 @@ for each_key in info:
             if len(keytouse) > 1:
                 if keytouse[1] not in test_bit:
                     test_bit[keytouse[1]] = []
-                for each_text in splitup[2:]:
+                for each_text in splitup[4:-1]:
                     new_text = str(each_text)
                     stripped = new_text.strip()
                     remove_tabs = stripped.replace('\t', '')
@@ -60,7 +60,7 @@ for each_key in info:
                     text_bit = remove_n[:-11]
                     date_bit = remove_n[-11:]
                     info_tabs.append([text_bit.strip(), date_bit.strip()])
-                    test_bit[keytouse[1]].append(info_tabs)
+                test_bit[keytouse[1]].append(info_tabs)
     keep_topics[each_key] = test_bit
 
 #print(keep_topics.keys())
