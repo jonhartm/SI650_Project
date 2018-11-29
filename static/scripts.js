@@ -2,6 +2,13 @@ $('#btn_search').click(function() {
   var term = $('#search_term').val();
   console.log("Searching for " + term);
 
+  // Clear the div of any existing content and add a spinner
+  $(".account_results").empty();
+  $(".account_results").append(
+    $("<img>")
+      .attr("src", '/static/ajax-loader.gif')
+  );
+
   $.ajax({
     contentType: "application/json",
     datatype: "json",
@@ -53,6 +60,13 @@ $(document).on("click", ".account_info", function(event) {
   var user_id = $(this).find(".account_id").val();
   var search_term = $('#search_term').val();
 
+  // Clear the div of any existing content and add a spinner
+  $(".tweet_results").empty();
+  $(".tweet_results").append(
+    $("<img>")
+      .attr("src", '/static/ajax-loader.gif')
+  );
+
   $.ajax({
     contentType: "application/json",
     datatype: "json",
@@ -64,7 +78,6 @@ $(document).on("click", ".account_info", function(event) {
     url:'/get_tweets_by_account',
     success: function(response) {
       console.log("ok");
-      console.log(response)
 
       $(".tweet_results").empty();
       for (var i = 0; i < response.length; i++) {
