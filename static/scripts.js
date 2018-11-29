@@ -27,11 +27,17 @@ $('#btn_search').click(function() {
                 .addClass("account_twitter_link")
                 .attr("href", 'https://twitter.com/'+response[i].screen_name)
                 .text('@'+response[i].screen_name)
-              )
+            )
             .append(
               $("<img>")
                 .addClass("account_profile_image")
                 .attr("src", response[i].profile_image)
+            )
+            .append(
+              $("<input>")
+                .addClass("account_id")
+                .attr("type", "hidden")
+                .val(response[i].id)
             )
         );
       }

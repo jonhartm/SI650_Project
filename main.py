@@ -44,6 +44,7 @@ def get_account():
             user = api.GetUser(int(account_id))
             ret_value.append({
                 "name":user.name,
+                "id":user.id,
                 "screen_name":user.screen_name,
                 "profile_image":user.profile_image_url_https
             })
