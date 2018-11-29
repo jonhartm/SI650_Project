@@ -50,6 +50,21 @@ def get_account():
             })
         return jsonify(ret_value)
 
+@app.route('/get_tweets_by_account', methods=['POST'])
+def get_tweets_by_account():
+    if request.method == "POST":
+        term = request.get_json()['search_term']
+        tweet_ids = idx.search_tweets(term)
+        ret_value = []
+        for tweet in api.GetStatuses(tweet_ids):
+            ret_value.append({
+                "text":tweet.full_text,
+                "created_at":tweet.created_at,
+                "id_str":tweet.id_str,
+                "user":tweet.user.screen_name
+            })
+        return jsonify(ret_value)
+
 # create the parser object
 parser = argparse.ArgumentParser(
     description="Tweet Search program",

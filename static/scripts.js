@@ -10,7 +10,7 @@ $('#btn_search').click(function() {
     url:'/get_account',
     success: function(response) {
       console.log("ok");
-      // Clear the div og any existing content
+      // Clear the div of any existing content
       $(".account_results").empty();
       // Iterate through the results and add a div for each
       for (var i = 0; i < response.length; i++) {
@@ -48,3 +48,48 @@ $('#btn_search').click(function() {
     }
   })
 })
+
+$(document).on("click", ".account_info", function(event) {
+  var user_id = $(this).find(".account_id").val();
+  var search_term = $('#search_term').val();
+
+  $.ajax({
+    contentType: "application/json",
+    datatype: "json",
+    data:JSON.stringify({
+      "id":user_id,
+      "search_term":search_term
+    }),
+    type:"POST",
+    url:'/get_tweets_by_account',
+    success: function(response) {
+      console.log("ok");
+      console.log(response)
+
+      $(".tweet_results").empty();
+      for (var i = 0; i < response.length; i++) {
+        $(".tweet_results").append(
+          $("<div>")
+            .addClass("tweet_info")
+            .append(
+              $("<p>")
+                .addClass("tweet_text")
+                .text(
+                  "@"+response[i].user+": "+response[i].text
+                )
+            )
+            .append(
+              $("<a>")
+                .addClass("tweet_link")
+                .attr("href", 'https://twitter.com/i/web/status/'+response[i].id_str)
+                .text("Link to Tweet")
+            )
+        );
+      }
+    },
+    error: function(error) {
+      console.log("uh oh");
+      console.log(error);
+    }
+  })
+});
