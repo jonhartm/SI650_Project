@@ -63,7 +63,8 @@ for each_key in info:
                 test_bit[keytouse[1]].append(info_tabs)
     keep_topics[each_key] = test_bit
 
-#print(keep_topics.keys())
+print(keep_topics.keys())
+print(len(keep_topics))
 #print(info.keys())
 #keep_topics = {}
 
@@ -90,5 +91,5 @@ for each_key in info:
 
 #print(keep_topics['Debbie Stabenow_mi_Senate'][0:5])
 
-with open("by_topic.json", "w", encoding = 'utf-8') as tsw:
-    json.dump(keep_topics, tsw)
+#with open("by_topic.json", "w", encoding = 'utf-8') as tsw:
+#    json.dump(keep_topics, tsw)

@@ -65,27 +65,29 @@ for each in info:
             senate.append(every['href'])
     chunks[each] = [house, senate]
 
-#print(chunks['mi'])
+print(chunks['ak'])
 
-person_data = {}
-search_url = "http://www.ontheissues.org{}".format(chunks['mi'][0][0][2:])
-print(search_url)
-#request url
-time.sleep(5)
-page = requests.get(search_url)
-time.sleep(5)
-#grab text
-page_text = page.text
-#create soup object
-#page_soup = BeautifulSoup(page_text, 'html.parser')
-if 'mi' not in person_data:
-    person_data['mi'] = {}
-    if 'House' not in person_data['mi']:
-        person_data['mi']['House'] = {}
+#person_data = {}
 
-person_data['mi']['House'] = page_text
+#for each in list_of_state_abbrv:
+#    search_url = "http://www.ontheissues.org{}".format(chunks[each][0][0][2:])
+    #print(search_url)
+    #request url
+#    time.sleep(5)
+#    page = requests.get(search_url)
+#    time.sleep(5)
+    #grab text
+#    page_text = page.text
+    #create soup object
+    #page_soup = BeautifulSoup(page_text, 'html.parser')
+#    if each not in person_data:
+#        person_data[each] = {}
+#        if 'House' not in person_data[each]:
+#            person_data[each]['House'] = {}
 
-print(person_data['mi']['House'])
+#    person_data[each]['House'] = page_text
+
+    #print(person_data['mi']['House'])
 
 for each_state in chunks:
     for each_item in chunks[each_state][0]:
@@ -122,6 +124,8 @@ for each_state in chunks:
             person_data[each_state]['Senate'] = page_text
         except:
             print("http://www.ontheissues.org{}".format(each_item[2:]))
+
+print(person_data)
 
 with open('StatePeople.txt', 'w') as file:
      file.write(json.dumps(person_data))
