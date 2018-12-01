@@ -122,4 +122,4 @@ print(keep_topics.keys())
 print(len(keep_topics))
 
 with open('full_topic_bit.json', 'w', encoding='utf-8') as file:
-     json.dump(person_data, file)
+     json.dump(keep_topics, file)
