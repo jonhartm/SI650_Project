@@ -25,20 +25,28 @@ $('#btn_search').click(function() {
           $("<div>")
             .addClass("account_info")
             .append(
-              $("<img>")
-                .addClass("account_profile_image")
-                .attr("src", response[i].profile_image)
+              $("<div>")
+                .addClass("account_image_container")
+                  .append(
+                    $("<img>")
+                      .addClass("account_profile_image")
+                      .attr("src", response[i].profile_image)
+                  )
             )
             .append(
-              $("<p>")
-                .addClass("account_user_name")
-                .text(response[i].name)
-            )
-            .append(
-              $("<a>")
-                .addClass("account_twitter_link")
-                .attr("href", 'https://twitter.com/'+response[i].screen_name)
-                .text('@'+response[i].screen_name)
+              $("<div>")
+                .addClass("account_detail_container")
+                  .append(
+                    $("<p>")
+                      .addClass("account_user_name")
+                      .text(response[i].name)
+                  )
+                  .append(
+                    $("<a>")
+                      .addClass("account_twitter_link")
+                      .attr("href", 'https://twitter.com/'+response[i].screen_name)
+                      .text('@'+response[i].screen_name)
+                  )
             )
             .append(
               $("<input>")
