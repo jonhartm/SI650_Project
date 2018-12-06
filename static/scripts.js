@@ -25,6 +25,11 @@ $('#btn_search').click(function() {
           $("<div>")
             .addClass("account_info")
             .append(
+              $("<img>")
+                .addClass("account_profile_image")
+                .attr("src", response[i].profile_image)
+            )
+            .append(
               $("<p>")
                 .addClass("account_user_name")
                 .text(response[i].name)
@@ -34,11 +39,6 @@ $('#btn_search').click(function() {
                 .addClass("account_twitter_link")
                 .attr("href", 'https://twitter.com/'+response[i].screen_name)
                 .text('@'+response[i].screen_name)
-            )
-            .append(
-              $("<img>")
-                .addClass("account_profile_image")
-                .attr("src", response[i].profile_image)
             )
             .append(
               $("<input>")
