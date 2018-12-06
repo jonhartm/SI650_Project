@@ -1,3 +1,38 @@
+body {
+  background-color: #7A9D96;
+}
+
 .account_results {
-  background-color: pink
+  background-color: #CAE4DB;
+}
+
+.tweet_results {
+  background-color: #CAE4DB;
+}
+
+.ontheissues_results {
+  background-color: #CAE4DB;
+}
+
+div {
+
+    font-family: "Arial", Verdana, sans;
+    margin: auto;
+    width: 50%;
+    border: 3px solid white;
+    padding: 10px;
+
+}
+
+button {
+  background-color: #00303F;
+  border: 2px solid #00303F;
+  border-radius: 8px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: "Arial", Verdana, sans;
+  font-size: 16px;
 }

@@ -56,7 +56,7 @@ def create_tweet_index(docs):
     ix = create_in("indexdir", schema)
 
     with ix.writer() as writer:
-        for doc in docs.iterrows():
+        for doc in docs.sample(10000).iterrows():
             try:
                 writer.add_document(
                     content=doc[1].text,
