@@ -54,7 +54,8 @@ def get_account():
 def get_tweets_by_account():
     if request.method == "POST":
         term = request.get_json()['search_term']
-        tweet_ids = idx.search_tweets(term)
+        user = request.get_json()['id']
+        tweet_ids = idx.search_tweets(term, restrict_to_user=user)
         ret_value = []
         for tweet in api.GetStatuses(tweet_ids):
             ret_value.append({

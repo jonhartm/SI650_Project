@@ -64,7 +64,7 @@ def create_tweet_index(docs):
                     hashtags=','.join(doc.hashtags),
                     ats=','.join(doc.ats),
                     # urls=' '.join(doc[1].urls),
-                    user=str(doc.user)
+                    user=str(np.int64(float(doc.user)))
                 )
             except Exception as e:
                 print(e)
@@ -106,8 +106,11 @@ def create_combined_index(docs):
 #   limit: (optional) maximum number of ids to return
 # returns:
 #   a list of tweet ids most related to the provided term
-def search_tweets(search_term, limit=5):
-    return _do_search(open_dir("indexdir"), search_term, limit)
+def search_tweets(search_term, limit=5, restrict_to_user=None):
+    index = open_dir("indexdir")
+    if restrict_to_user is not None:
+        restrict_to_user = QueryParser('user', index.schema).parse(restrict_to_user)
+    return _do_search(index, search_term, limit, restrict_to_user)
 
 # search the combined index for the provided term
 # params:
@@ -125,11 +128,11 @@ def search_combined(search_term, limit=3):
 #   limit: maximum number of ids to return
 # returns:
 #   a list of ids containing most related to the provided term
-def _do_search(index, search_term, limit):
+def _do_search(index, search_term, limit, restrict_query=None):
     result_ids = []
     with index.searcher() as searcher:
         query = QueryParser("content", index.schema).parse(search_term)
-        results = searcher.search(query, limit=limit)
+        results = searcher.search(query, limit=limit, filter=restrict_query)
 
         for r in results:
             result_ids.append(r['id'])
