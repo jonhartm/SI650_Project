@@ -128,10 +128,14 @@ def search_combined(search_term, limit=3):
 #   limit: maximum number of ids to return
 # returns:
 #   a list of ids containing most related to the provided term
-def _do_search(index, search_term, limit, restrict_query=None):
+def _do_search(index, search_terms, limit, restrict_query=None):
     result_ids = []
+
+    if isinstance(search_terms, list):
+        search_terms = ' OR '.join(search_terms)
+
     with index.searcher() as searcher:
-        query = QueryParser("content", index.schema).parse(search_term)
+        query = QueryParser("content", index.schema).parse(search_terms)
         results = searcher.search(query, limit=limit, filter=restrict_query)
 
         for r in results:
