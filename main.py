@@ -6,6 +6,7 @@ import twitter
 
 import secrets
 import index as idx
+import LSI_vectorizer as lsi
 
 api = twitter.Api(consumer_key=secrets.consumer_key,
                   consumer_secret=secrets.consumer_secret,
@@ -76,6 +77,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument("--createindex", nargs=1, help = "Create an index from the supplied tweet file")
 parser.add_argument("--searchtweets", nargs=1, help = "Search the tweet index")
 parser.add_argument("--searchcombined", nargs=1, help = "Search the combined index")
+parser.add_argument("--makevectorizer", nargs=1, help = "Create a LSI matrix from the provided tweet file")
 
 args = parser.parse_args()
 
@@ -85,5 +87,7 @@ elif args.searchtweets != None:
     print(idx.search_tweets(args.searchtweets[0]))
 elif args.searchcombined != None:
     print(idx.search_combined(args.searchcombined[0]))
+elif args.makevectorizer != None:
+    lsi.make_vectorizor(args.makevectorizer[0])
 else:
     app.run(debug=True)

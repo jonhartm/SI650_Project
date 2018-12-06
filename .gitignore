@@ -5,3 +5,4 @@ indexcomb/
 secrets.py
 *.csv
 *.txt
+*.npy
