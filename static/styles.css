@@ -22,6 +22,42 @@ body {
   color:#00303F
   font-variant:small-caps;
   font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.account_info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.account_image_container {
+  border: none;
+  padding: 1px;
+  width: 30%;
+}
+
+.account_detail_container {
+  border: none;
+  font-size: 12px;
+  padding: 5px;
+  width: 30%;
+}
+
+.account_profile_image {
+  width: 100%;
+  height: auto;
+}
+
+.org_try {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 .tweet_results {
@@ -43,7 +79,7 @@ div {
 
     font-family: "Arial", Verdana, sans;
     margin: auto;
-    width: 50%;
+    width: 75%;
     border: 3px solid white;
     padding: 10px;
     text-align: center;
