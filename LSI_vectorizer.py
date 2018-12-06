@@ -35,11 +35,12 @@ def find_similar_words(term):
     Vt = np.load("vocab_vectors.npy")
 
     results = []
-    for x in range(0,len(vocab)-1):
-        dist = 1-distance.cosine(Vt[:,vocab.loc[term].values[0]], Vt[:,x])
-        results.append({"x":vocab.iloc[x].name, "dist":dist})
-
     similar_words = []
-    for similar in DataFrame(results).sort_values('dist', ascending=False).head(10).x.values[1:]:
-        similar_words.append(similar)
+
+    if term in vocab.index:
+        for x in range(0,len(vocab)-1):
+            dist = 1-distance.cosine(Vt[:,vocab.loc[term].values[0]], Vt[:,x])
+            results.append({"x":vocab.iloc[x].name, "dist":dist})
+        for similar in DataFrame(results).sort_values('dist', ascending=False).head(10).x.values[1:]:
+            similar_words.append(similar)
     return similar_words
