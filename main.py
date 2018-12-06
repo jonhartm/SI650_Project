@@ -16,7 +16,15 @@ api = twitter.Api(consumer_key=secrets.consumer_key,
 
 tweet_file = 'output.csv'
 account_file = 'accounts.csv'
-on_the_issues_file = 'by_topic.json'
+on_the_issues_file = 'full_topic_bit.json'
+
+with open("full_topic_bit.json") as f:
+    oti_data = json.load(f)
+
+accounts = pd.read_csv("accounts.csv")
+accounts.set_index("Uid", inplace=True)
+accounts.index = accounts.index.astype(str)
+accounts.json_key.fillna("", inplace=True)
 
 app = Flask(__name__)
 
@@ -27,7 +35,7 @@ with open(on_the_issues_file) as f:
 @app.route('/')
 def index():
     # 24 terms, shouldn't matter who we pull them from
-    terms = oti_data['Debbie Stabenow_mi_Senate'].keys()
+    terms = oti_data['ak_HOUSE_Don_Young.htm'].keys()
     # I want to pass both a pretty and a usable version of each term
     r = re.compile('[^a-z A-Z]')
     term_pairs = [[r.sub('',x.lower()), x] for x in terms]
@@ -70,6 +78,20 @@ def get_tweets_by_account():
                 "user":tweet.user.screen_name
             })
         return jsonify(ret_value)
+
+@app.route('/get_OTI_json_by_account', methods=['POST'])
+def get_OTI_json_by_account():
+    if request.method == "POST":
+        id = request.get_json()['id']
+        topic = request.get_json()['topic']
+        json_key = accounts.loc[id].json_key
+
+        # if we found some data, return the values associated with that key-topic pair
+        if len(json_key) > 0:
+            return jsonify(oti_data[json_key][topic][0])
+
+        # if nothing else, return an empty list
+        return jsonify([])
 
 # create the parser object
 parser = argparse.ArgumentParser(
