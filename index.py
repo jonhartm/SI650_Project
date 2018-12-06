@@ -56,15 +56,15 @@ def create_tweet_index(docs):
     ix = create_in("indexdir", schema)
 
     with ix.writer() as writer:
-        for doc in docs.sample(10000).iterrows():
+        for i, doc in docs.iterrows():
             try:
                 writer.add_document(
-                    content=doc[1].text,
-                    id=str(doc[1].id),
-                    hashtags=','.join(doc[1].hashtags),
-                    ats=','.join(doc[1].ats),
+                    content=doc.text,
+                    id=str(doc.id),
+                    hashtags=','.join(doc.hashtags),
+                    ats=','.join(doc.ats),
                     # urls=' '.join(doc[1].urls),
-                    user=str(doc[1].user)
+                    user=str(doc.user)
                 )
             except Exception as e:
                 print(e)
@@ -90,11 +90,11 @@ def create_combined_index(docs):
     ix2 = create_in("indexcomb", schema)
 
     with ix2.writer() as writer:
-        for doc in combined_docs:
+        for i,doc in combined_docs:
             try:
                 writer.add_document(
-                    content=' '.join(doc[1].text),
-                    id=str(np.int64(float(doc[0])))
+                    content=' '.join(doc.text),
+                    id=str(np.int64(float(i)))
                 )
             except Exception as e:
                 print(e)
