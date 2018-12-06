@@ -113,4 +113,23 @@ $(document).on("click", ".account_info", function(event) {
       console.log(error);
     }
   })
+
+  $.ajax({
+    contentType: "application/json",
+    datatype: "json",
+    data:JSON.stringify({
+      "id":user_id,
+      "topic":$("#search_term option:selected").text()
+    }),
+    type:"POST",
+    url:'/get_OTI_json_by_account',
+    success: function(response) {
+      console.log("ok");
+      console.log(response);
+    },
+    error: function(error) {
+      console.log("uh oh");
+      console.log(error);
+    }
+  })
 });
