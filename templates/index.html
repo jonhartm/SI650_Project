@@ -5,6 +5,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+  <div class="title_bit">
+    SI650: Congressional Tweet Search
+  </div>
   <div class="seach_controls">
     <label for="search_term"> Select a search term:
       <select id="search_term" class="dd_search_term" name="search_term">
@@ -16,9 +19,13 @@
     <button type="button" id="btn_search" value="Search">Search</button>
   </div>
 
-  <div class="account_results"></div>
+  <div class="account_results">
+      Related Accounts
+  </div>
 
-  <div class="tweet_results"></div>
+  <div class="tweet_results">
+      Relevant Tweets
+  </div>
 
   <div class="ontheissues_results">
     Dummy Results from On The Issues...
