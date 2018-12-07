@@ -30,7 +30,7 @@ $('#btn_search').click(function() {
                   .append(
                     $("<img>")
                       .addClass("account_profile_image")
-                      .attr("src", response[i].profile_image)
+                      .attr("src", response[i].profile_image.replace('normal', 'bigger'))
                   )
             )
             .append(
