@@ -28,6 +28,18 @@ body {
   align-items: center;
 }
 
+.account_info:hover {
+  background-color: #7A9D96;
+}
+
+.account_info:active {
+  background-color: #FFF;
+}
+
+.account_info.active {
+  background-color: #FFF;
+}
+
 .account_info {
   display: flex;
   flex-direction: row;

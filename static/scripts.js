@@ -68,6 +68,11 @@ $(document).on("click", ".account_info", function(event) {
   var user_id = $(this).find(".account_id").val();
   var search_term = $('#search_term').val();
 
+  // remove the active class from all other account detail divs
+  $(".account_info").removeClass("active");
+
+  $(this).addClass("active");
+
   // Clear the div of any existing content and add a spinner
   $(".tweet_results").empty();
   $(".tweet_results").append(
