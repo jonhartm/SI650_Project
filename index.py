@@ -46,10 +46,10 @@ def create_tweet_index(docs):
     super_print("Creating tweet index...")
     # set up the index schema
     schema = Schema(
-        content=TEXT(stored=True),
+        content=TEXT,
         id=ID(stored=True),
-        hashtags=KEYWORD,
-        ats=KEYWORD,
+        hashtags=KEYWORD(stored=True),
+        ats=KEYWORD(stored=True),
         # urls=TEXT,
         user=KEYWORD
     )
@@ -83,7 +83,7 @@ def create_combined_index(docs):
 
     # set up the schema
     schema = Schema(
-        content=TEXT(stored=True),
+        content=TEXT,
         id=ID(stored=True)
     )
 
@@ -128,7 +128,7 @@ def search_combined(search_term, limit=3):
 #   limit: maximum number of ids to return
 # returns:
 #   a list of ids containing most related to the provided term
-def _do_search(index, search_terms, limit, restrict_query=None):
+def _do_search(index, search_terms, limit, restrict_query=None, get_keywords=False):
     result_ids = []
 
     if isinstance(search_terms, list):
@@ -137,7 +137,16 @@ def _do_search(index, search_terms, limit, restrict_query=None):
     with index.searcher() as searcher:
         query = QueryParser("content", index.schema).parse(search_terms)
         results = searcher.search(query, limit=limit, filter=restrict_query)
+        if get_keywords:
+            keywords = [
+                keyword for keyword, score in
+                    results.key_terms("hashtags", docs=20, numterms=3) +
+                    results.key_terms("ats", docs=20, numterms=3)
+                ]
 
         for r in results:
             result_ids.append(r['id'])
-    return result_ids
+    if get_keywords:
+        return result_ids, keywords
+    else:
+        return result_ids
