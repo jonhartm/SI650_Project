@@ -65,13 +65,15 @@ def get_account():
 @app.route('/get_tweets_by_account', methods=['POST'])
 def get_tweets_by_account():
     if request.method == "POST":
-        term = request.get_json()['search_term']
+        term = request.get_json()['search_term'].split()
 
         # expand the query with LSA
-        related_terms = lsi.find_similar_words(term)
+        related_terms = []
+        for t in term:
+            related_terms+= lsi.find_similar_words(t)
 
         user = request.get_json()['id']
-        tweet_ids = idx.search_tweets([term] + related_terms, restrict_to_user=user)
+        tweet_ids = idx.search_tweets(term + related_terms, restrict_to_user=user)
         ret_value = []
         for tweet in api.GetStatuses(tweet_ids):
             ret_value.append({
@@ -80,6 +82,9 @@ def get_tweets_by_account():
                 "id_str":tweet.id_str,
                 "user":tweet.user.screen_name
             })
+        ret_value.append({
+            "related_terms":related_terms
+        })
         return jsonify(ret_value)
 
 @app.route('/get_OTI_json_by_account', methods=['POST'])

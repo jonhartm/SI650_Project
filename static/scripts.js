@@ -16,7 +16,7 @@ $('#btn_search').click(function() {
     type:"POST",
     url:'/get_account',
     success: function(response) {
-      console.log("ok");
+      console.log(response);
       // Clear the div of any existing content
       $(".account_results").empty();
       // Iterate through the results and add a div for each
@@ -90,27 +90,29 @@ $(document).on("click", ".account_info", function(event) {
     type:"POST",
     url:'/get_tweets_by_account',
     success: function(response) {
-      console.log("ok");
+      console.log(response);
 
       $(".tweet_results").empty();
       for (var i = 0; i < response.length; i++) {
-        $(".tweet_results").append(
-          $("<div>")
-            .addClass("tweet_info")
-            .append(
-              $("<p>")
-                .addClass("tweet_text")
-                .text(
-                  "@"+response[i].user+": "+response[i].text
-                )
-            )
-            .append(
-              $("<a>")
-                .addClass("tweet_link")
-                .attr("href", 'https://twitter.com/i/web/status/'+response[i].id_str)
-                .text("Link to Tweet")
-            )
-        );
+        if ("id_str" in response[i]) {
+          $(".tweet_results").append(
+            $("<div>")
+              .addClass("tweet_info")
+              .append(
+                $("<p>")
+                  .addClass("tweet_text")
+                  .text(
+                    "@"+response[i].user+": "+response[i].text
+                  )
+              )
+              .append(
+                $("<a>")
+                  .addClass("tweet_link")
+                  .attr("href", 'https://twitter.com/i/web/status/'+response[i].id_str)
+                  .text("Link to Tweet")
+              )
+          );
+        }
       }
     },
     error: function(error) {
@@ -129,6 +131,7 @@ $(document).on("click", ".account_info", function(event) {
     type:"POST",
     url:'/get_OTI_json_by_account',
     success: function(response) {
+      console.log(response);
       $("#on_the_issues").empty();
       $("#on_the_issues").text("Results from On The Issues...");
       var issues_list = $("<ul>");
