@@ -84,11 +84,11 @@ def get_OTI_json_by_account():
     if request.method == "POST":
         id = request.get_json()['id']
         topic = request.get_json()['topic']
-        json_key = accounts.loc[id].json_key
+        json_key = accounts.loc[str(id)].json_key
 
         # if we found some data, return the values associated with that key-topic pair
         if len(json_key) > 0:
-            return jsonify(oti_data[json_key][topic][0])
+            return jsonify(sorted(oti_data[json_key][topic][0], key=lambda x: int(x[1][5:-1]), reverse=True))
 
         # if nothing else, return an empty list
         return jsonify([])
