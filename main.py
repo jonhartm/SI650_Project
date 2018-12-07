@@ -50,13 +50,16 @@ def get_account():
         term = request.get_json()['search_term']
         ret_value = []
         for account_id in idx.search_combined(term):
-            user = api.GetUser(int(account_id))
-            ret_value.append({
-                "name":user.name,
-                "id":user.id,
-                "screen_name":user.screen_name,
-                "profile_image":user.profile_image_url_https
-            })
+            try:
+                user = api.GetUser(int(account_id))
+                ret_value.append({
+                    "name":user.name,
+                    "id":user.id,
+                    "screen_name":user.screen_name,
+                    "profile_image":user.profile_image_url_https
+                })
+            except:
+                pass
         return jsonify(ret_value)
 
 @app.route('/get_tweets_by_account', methods=['POST'])
