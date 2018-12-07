@@ -9,6 +9,9 @@ $('#btn_search').click(function() {
       .attr("src", '/static/ajax-loader.gif')
   );
 
+  $(".tweet_results").empty();
+  $("#on_the_issues").empty();
+
   $.ajax({
     contentType: "application/json",
     datatype: "json",
