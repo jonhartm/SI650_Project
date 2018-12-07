@@ -124,8 +124,20 @@ $(document).on("click", ".account_info", function(event) {
     type:"POST",
     url:'/get_OTI_json_by_account',
     success: function(response) {
-      console.log("ok");
-      console.log(response);
+      $("#on_the_issues").empty();
+      $("#on_the_issues").text("Results from On The Issues...");
+      var issues_list = $("<ul>");
+      for (var i = 0; i < response.length; i++) {
+        console.log(response[i]);
+        issues_list.append(
+          $("<div>")
+            .append(
+              $("<li>")
+                .text(response[i][0] + " " + response[i][1])
+            )
+        );
+      }
+      $("#on_the_issues").append(issues_list);
     },
     error: function(error) {
       console.log("uh oh");
