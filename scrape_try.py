@@ -25,12 +25,17 @@ for each in info:
     link_items = page_soup.find_all('a', href=True)
     house = []
     senate = []
+    other = []
     for every in link_items:
         if 'House' in every['href']:
-            house.append(every['href'])
+            #house.append(every['href'])
+            pass
         if 'Senate' in every['href']:
-            senate.append(every['href'])
-    chunks[each] = [house, senate]
+            #senate.append(every['href'])
+            pass
+        else:
+            other.append(every['href'])
+    chunks[each] = [house, senate, other]
 
 #print(chunks['ak'])
 
@@ -116,10 +121,50 @@ for each_state in chunks:
                 keep_topics[overall_key] = test_bit
         except:
             print("http://www.ontheissues.org{}".format(each_item[2:]))
+    for each_item in chunks[each_state][2]:
+        overall_key = each_state + "_" + "UNSPEC_"
+        try:
+            search_url = "http://www.ontheissues.org{}".format(each_item[2:])
+            #if len(search_url.split("/")) > 4:
+            cutup = search_url.split("/")
+            overall_key += cutup[-1]
+            #request url
+            time.sleep(5)
+            page = requests.get(search_url)
+            time.sleep(5)
+            #grab text
+            page_text = page.text
+            #create soup object
+            page_soup = BeautifulSoup(page_text, 'html.parser')
+
+            headers = page_soup.find_all('td')
+            test_bit = {}
+            for each in headers:
+                if 'Click here for' in each.text:
+                    info_tabs = []
+                    text_chunk = each.text
+                    splitup = text_chunk.split('\r\n')
+                    keytouse = splitup[1].split(' on ')
+                    #print(keytouse)
+                    if len(keytouse) > 1:
+                        if keytouse[1] not in test_bit:
+                            test_bit[keytouse[1]] = []
+                        for each_text in splitup[4:-1]:
+                            new_text = str(each_text)
+                            stripped = new_text.strip()
+                            remove_tabs = stripped.replace('\t', '')
+                            remove_n = remove_tabs.replace('\n', '')
+                            text_bit = remove_n[:-11]
+                            date_bit = remove_n[-11:]
+                            info_tabs.append([text_bit.strip(), date_bit.strip()])
+                        test_bit[keytouse[1]].append(info_tabs)
+            keep_topics[overall_key] = test_bit
+        except:
+            print("http://www.ontheissues.org{}".format(each_item[2:]))
 
 
 print(keep_topics.keys())
 print(len(keep_topics))
 
-with open('full_topic_bit.json', 'w', encoding='utf-8') as file:
+with open('full_topic_bit_2.json', 'w', encoding='utf-8') as file:
      json.dump(keep_topics, file)
