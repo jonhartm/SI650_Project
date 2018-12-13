@@ -47,9 +47,15 @@ def index():
 @app.route('/get_account', methods=['POST'])
 def get_account():
     if request.method == "POST":
-        term = request.get_json()['search_term']
+        term = request.get_json()['search_term'].split()
+
+        # expand the query with LSA
+        related_terms = []
+        for t in term:
+            related_terms += lsi.find_similar_words(t)
+
         ret_value = []
-        for account_id in idx.search_combined(term):
+        for account_id in idx.search_combined(term + related_terms):
             try:
                 user = api.GetUser(int(account_id))
                 ret_value.append({
