@@ -87,6 +87,14 @@ body {
   font-weight: bold;
 }
 
+.primary_highlight {
+  background-color: #DDFF00;
+}
+
+.secondary_highlight {
+  background-color: #00DDDD;
+}
+
 div {
 
     font-family: "Arial", Verdana, sans;

@@ -25,7 +25,7 @@ $('#btn_search').click(function() {
       // Related terms will always be the last item in the response.
       // Pop it off and display it in the proper div
       related_terms = response.pop()['related_terms'];
-      $("#related_terms").html("<b>Related Terms</b>: " + related_terms.join(', '));
+      $("#related_terms").html("<b>Related Terms</b>: <span id='term_list'>" + related_terms.join(', ') + "<span>");
 
       // Clear the div of any existing content
       $(".account_results").empty();
@@ -109,8 +109,11 @@ $(document).on("click", ".account_info", function(event) {
               .append(
                 $("<p>")
                   .addClass("tweet_text")
-                  .text(
-                    "@"+response[i].user+": "+response[i].text
+                  .html(
+                    "@"+response[i].user+": " + add_highlights(
+                                                  response[i].text,
+                                                  search_term,
+                                                  $("#term_list").text().split(", "))
                   )
               )
               .append(
@@ -160,3 +163,19 @@ $(document).on("click", ".account_info", function(event) {
     }
   })
 });
+
+// Adds spans around text to allow css to highlight them
+// Adapted from https://stackoverflow.com/a/45519242
+function add_highlights(text, primary_term, secondary_terms) {
+  // highlight the primary term
+  var searchregexp = new RegExp(primary_term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "gi");
+  text = text.replace(searchregexp, "<span class='primary_highlight'>$&</span>");
+
+  // highlight each of the secondary terms
+  for (var i = 0; i < secondary_terms.length; i++) {
+    var searchregexp = new RegExp(secondary_terms[i].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "gi");
+    text = text.replace(searchregexp, "<span class='secondary_highlight'>$&</span>");
+  }
+
+  return text;
+}
