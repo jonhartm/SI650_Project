@@ -11,6 +11,7 @@ $('#btn_search').click(function() {
 
   $(".tweet_results").empty();
   $("#on_the_issues").empty();
+  $("#related_terms").empty();
 
   $.ajax({
     contentType: "application/json",
@@ -20,6 +21,12 @@ $('#btn_search').click(function() {
     url:'/get_account',
     success: function(response) {
       console.log(response);
+
+      // Related terms will always be the last item in the response.
+      // Pop it off and display it in the proper div
+      related_terms = response.pop()['related_terms'];
+      $("#related_terms").html("<b>Related Terms</b>: " + related_terms.join(', '));
+
       // Clear the div of any existing content
       $(".account_results").empty();
       // Iterate through the results and add a div for each
@@ -93,8 +100,6 @@ $(document).on("click", ".account_info", function(event) {
     type:"POST",
     url:'/get_tweets_by_account',
     success: function(response) {
-      console.log(response);
-
       $(".tweet_results").empty();
       for (var i = 0; i < response.length; i++) {
         if ("id_str" in response[i]) {
@@ -134,12 +139,11 @@ $(document).on("click", ".account_info", function(event) {
     type:"POST",
     url:'/get_OTI_json_by_account',
     success: function(response) {
-      console.log(response);
       $("#on_the_issues").empty();
       $("#on_the_issues").text("Results from On The Issues...");
       var issues_list = $("<ul>");
       for (var i = 0; i < response.length; i++) {
-        console.log(response[i]);
+        // console.log(response[i]);
         issues_list.append(
           $("<div>")
             .append(

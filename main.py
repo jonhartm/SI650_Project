@@ -66,6 +66,9 @@ def get_account():
                 })
             except:
                 pass
+        ret_value.append({
+            "related_terms":related_terms
+        })
         return jsonify(ret_value)
 
 @app.route('/get_tweets_by_account', methods=['POST'])
@@ -88,9 +91,6 @@ def get_tweets_by_account():
                 "id_str":tweet.id_str,
                 "user":tweet.user.screen_name
             })
-        ret_value.append({
-            "related_terms":related_terms
-        })
         return jsonify(ret_value)
 
 @app.route('/get_OTI_json_by_account', methods=['POST'])
