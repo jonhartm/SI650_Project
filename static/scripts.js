@@ -1,4 +1,6 @@
 $('#btn_search').click(function() {
+  console.time('account_search');
+
   var term = $('#search_term').val();
   console.log("Searching for " + term);
 
@@ -66,6 +68,7 @@ $('#btn_search').click(function() {
             )
         );
       }
+      console.timeEnd('account_search');
     },
     error: function(error) {
       console.log("uh oh");
@@ -75,6 +78,8 @@ $('#btn_search').click(function() {
 })
 
 $(document).on("click", ".account_info", function(event) {
+  console.time('tweet_search');
+
   var user_id = $(this).find(".account_id").val();
   var search_term = $('#search_term').val();
 
@@ -125,6 +130,7 @@ $(document).on("click", ".account_info", function(event) {
           );
         }
       }
+      console.timeEnd('tweet_search');
     },
     error: function(error) {
       console.log("uh oh");
