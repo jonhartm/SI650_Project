@@ -6,3 +6,5 @@ secrets.py
 *.csv
 *.txt
 *.npy
+*.ipynb
+*.json
